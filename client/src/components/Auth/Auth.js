@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container} from "@material-ui/core";
 import { GoogleLogin } from "react-google-login";
+import { gapi } from "gapi-script"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 import Icon from "./icon";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
@@ -12,6 +15,8 @@ function Auth() {
     const [showPassword, setShowPassword] = useState(false);
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
     const [isSignup, setIsSignup] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleSubmit = () => {
 
@@ -25,9 +30,30 @@ function Auth() {
         setIsSignup((prevIsSignup) => !prevIsSignup);
         handleShowPassword(false);
     };
-
+    //gapi auth inicializa los datos del login para pasarlos al GoogleLogin
+    useEffect(() => {
+        function start() {
+          gapi.client.init({
+            clientId: '93708235388-tvsaqnesf1cgk869c2re2l833o2t0us1.apps.googleusercontent.com',
+            scope: 'email',
+          });
+        }
+    
+        gapi.load('client:auth2', start);
+      }, []);
+        
+    //Si el login fue exitoso guarda los datos de la autenticacion
     const googleSuccess = async (res) => {
-        console.log(res);
+        const result = res?.profileObj;
+        const token = res?.tokenId;
+
+        try {
+            dispatch({ type: 'AUTH', data: {result, token} });
+            //Envia directamente al homePage
+            navigate('/');
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const googleFailure = (error) => {
