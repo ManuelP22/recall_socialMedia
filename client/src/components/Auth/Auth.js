@@ -4,26 +4,36 @@ import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { singup, singin } from "../../actions/auth.js"
 
 import Icon from "./icon";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
 import Input from './Input';
 import useStyles from "./styles";
 
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: ''}
+
 function Auth() {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
     const [isSignup, setIsSignup] = useState(false);
+    const [formData, setFormData] = useState(initialState);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleSubmit = () => {
+    //sube los datos el login de la pagina
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
+        if(isSignup){
+            dispatch(singup(formData, navigate))
+        } return  dispatch(singin(formData, navigate))
     };
 
-    const handleChange = () => {
-
+    //selecciona los datos especificos de el form de inicio de secion
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value})
     };
 
     const switchMode = () => {
