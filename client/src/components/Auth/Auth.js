@@ -4,7 +4,7 @@ import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { singup, singin } from "../../actions/auth.js"
+import { signup, signin } from "../../actions/auth.js"
 
 import Icon from "./icon";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
@@ -27,8 +27,10 @@ function Auth() {
         e.preventDefault();
 
         if(isSignup){
-            dispatch(singup(formData, navigate))
-        } return  dispatch(singin(formData, navigate))
+            dispatch(signup(formData, navigate))
+        } else  {
+            dispatch(signin(formData, navigate))
+        }
     };
 
     //selecciona los datos especificos de el form de inicio de secion
@@ -38,7 +40,7 @@ function Auth() {
 
     const switchMode = () => {
         setIsSignup((prevIsSignup) => !prevIsSignup);
-        handleShowPassword(false);
+        setShowPassword(false);
     };
     //gapi auth inicializa los datos del login para pasarlos al GoogleLogin
     useEffect(() => {
