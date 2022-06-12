@@ -26,6 +26,21 @@ export const getPost = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+
+export const getPostsBySearch = async (req, res) => {
+    const { searchQuery, tags } = req.query;
+
+    try {
+        const title = new RegExp(searchQuery, "i");
+
+        const posts = await PostMessage.find({ $or: [ { title }, { tags: { $in: tags.split(',') } } ]});
+
+        res.json({ data: posts });
+    } catch (error) {    
+        res.status(404).json({ message: error.message });
+    }
+}
+
 //changes crear post basado en el id del usuario
 export const createPost = async (req, res) => {
     const post = req.body;
