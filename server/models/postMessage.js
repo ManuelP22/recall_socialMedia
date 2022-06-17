@@ -8,6 +8,7 @@ const postSchema = mongoose.Schema({
     tags: [String],
     selectedFile: String,
     likes: { type: [String], default: [] },
+    comments: { type: [String], default: [] },
     createdAt: {
         type: Date,
         default: new Date(),
@@ -16,4 +17,4 @@ const postSchema = mongoose.Schema({
 
 var PostMessage = mongoose.model('PostMessage', postSchema);
 
-export default PostMessage;
+export default PostMessage; 
