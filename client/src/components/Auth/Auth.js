@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { gapi } from 'gapi-script'
 
 import Icon from './icon';
 import { signin, signup } from '../../actions/auth';
@@ -28,6 +29,19 @@ const SignUp = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
     setShowPassword(false);
   };
+
+  //gapi auth inicializa los datos del login para pasarlos al GoogleLogin
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: '93708235388-tvsaqnesf1cgk869c2re2l833o2t0us1.apps.googleusercontent.com',
+        scope: 'email',
+      });
+    }
+
+    gapi.load('client:auth2', start);
+  }, []);
+
   //sube los datos el login de la pagina
   const handleSubmit = (e) => {
     e.preventDefault();
